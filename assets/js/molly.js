@@ -224,8 +224,8 @@ function fileSelected() {
         colModel:[
             {name:'id',index:'id', width:(pageWidth*(5/100)), sorttype:"int",editable:false },
             {name:'FileName',index:'FileName', width:(pageWidth*(35/100)), editable:false },
-            {name:'Template',index:'Template', width:(pageWidth*(60/100)), editable:true},
-            // {name:'Template',index:'Template', width:(pageWidth*(60/100)), rows:9 , editable:true, edittype: "textarea", editoptions:{ rows:9 }},
+            // {name:'Template',index:'Template', width:(pageWidth*(60/100)), editable:true},
+            {name:'Template',index:'Template', width:(pageWidth*(60/100)), rows:9 , editable:true, edittype: "textarea", editoptions:{ rows:9 }},
 
         ],
         ondblClickRow: function (rowid, iRow,iCol) {
