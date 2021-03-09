@@ -5,14 +5,35 @@
 */
 
 var mydata =[];
+var lastSel;
+
+////////////////////////////////////////////////////////////////////////////////
+//COMMON FUNCTION
+////////////////////////////////////////////////////////////////////////////////
+function check_grid_data_not_empty(){
+
+    var p = $("#Table_input_file").jqGrid("getGridParam",'data');
+
+    if (typeof p === "undefined"){
+        return 1
+    }else if( p.length == 0 ){
+        return 1
+    }else{
+        return 0
+    }
+
+}
+////////////////////////////////////////////////////////////////////////////////
 
 function Choose_Batch_gen_recipe(){
 
-    console.log("DO : Choose_Batch_gen_recipe" );
+    console.log("DO : " + arguments.callee.name );
 
     // contorl vision
     $("#div1").show();
     $("#btn2").show();
+    $("#btn2").attr("disabled", true);
+    $("#btn3").show();
 
     // let sh_type_s = document.getElementById('sh_type')
     // sh_type_s.value = "#!/usr/bin/rsh -R"
@@ -46,16 +67,20 @@ function Choose_Batch_gen_recipe(){
     // rs_tmp.value += "OPT_1_1=;"
     // rs_tmp.value += "\n"
 
+
+    console.log("DONE : " + arguments.callee.name );
+
 }
 function gen_recipe_by_filename(filename){
+
+
 
     let fname=filename;
     filename_trip_1=filename.replace(".sh", "");
     filename_trip_2=filename_trip_1.replaceAll("_", " ");
-	// filename_trip_2=filename_trip_1.replace("_", " ");
 
     let rs_tmp = "";
-    rs_tmp = "#!/usr/bin/rsh -R";
+    rs_tmp = "#!/diagnostic/bin/rsh -R";
     rs_tmp += "\n";
     rs_tmp += "## " + filename_trip_2 + "#############";
     rs_tmp += "\n";
@@ -77,17 +102,17 @@ function gen_recipe_by_filename(filename){
 
 function Batch_gen_recipe(){
 
-    console.log("DO : Batch_gen_recipe" );
+    console.log("DO : " + arguments.callee.name );
 
-    //check rawdata
-    // if( mydata.length == 0 ){
-        // alert("No file to generate.")
-        // return
-    // }
+    var res = check_grid_data_not_empty()
+    if ( res != 0 ){
+        alert("No data to generate.")
+        return
+    }
 
     //check output .rcp file path
     gen_recipe()
-    console.log("DONE : Batch_gen_recipe" );
+    console.log("DONE : " + arguments.callee.name );
 }
 
 function gen_recipe(){
@@ -97,7 +122,7 @@ function gen_recipe(){
     var p = $("#Table_input_file").jqGrid("getGridParam",'data');
     // console.log("You will download " + p.length + " files.")
 
-    if (confirm("Are you sure download " + p.length + " files?")) {
+    if (confirm("Remember to click \"SAVE EDITED DATA\" before generate file.\nAre you sure download " + p.length + " files?")) {
       // Save it!
       console.log('Click yes to download files.');
     } else {
@@ -117,9 +142,8 @@ function gen_recipe(){
         //save file
         // var file_url = new Blob([output_fc], { type: 'text/plain' });//這會自動變成.txt檔
         var file_url = new Blob([output_fc], {type: "octet/stream"});
-        // var file_url = new Blob([output_fc]);
         var a = document.createElement('a');
-        a.download = output_fname;
+        a.download = output_fname+".rcp";
         a.href = window.URL.createObjectURL(file_url);
         a.textContent = 'Download ready';
         a.style='display:none';
@@ -142,6 +166,39 @@ function gen_recipe(){
     // tmp.concat(opt_s.value);
 
 }
+function Batch_gen_recipe_save(){
+
+    console.log("DO : " + arguments.callee.name );
+
+    var res = check_grid_data_not_empty()
+    if ( res != 0 ){
+        alert("No data to save.")
+        return
+    }
+
+    $("#btn2").attr("disabled", true);
+
+    //save current all jqGrid
+    var q = $("#Table_input_file").jqGrid("getGridParam",'data');
+    for  (var i = 1; i <= q.length; i++){
+        jQuery("#Table_input_file").jqGrid('saveRow',i, false, 'clientArray');
+        jQuery('#Table_input_file').jqGrid('editRow',i, true, null, null, 'clientArray');
+    }
+    $("#btn2").attr("disabled", false);
+    // q.gridComplete();
+    alert("SAVE OK");
+
+    console.log("DONE : " + arguments.callee.name );
+
+}
+
+function Gen_Scenario_script_save(){
+
+    console.log("DO : " + arguments.callee.name );
+    console.log("DONE : " + arguments.callee.name );
+
+}
+
 
 function open_file_option() {
     console.log("DO : open_file_option" );
@@ -174,8 +231,6 @@ function reSizejqGridWidth()
 }
 
 function fileSelected() {
-
-    console.log("IN fileSelected()" );
 
     $("#Table_input_file").jqGrid("clearGridData", true);
     mydata=[];
@@ -215,24 +270,37 @@ function fileSelected() {
     }
 
 
-
     jQuery("#Table_input_file").jqGrid({
         datatype: "local",
+        // data: mydata, //會重複顯示
         width: pageWidth,
 
         colNames:['No.','FileName', 'Template'],
         colModel:[
             {name:'id',index:'id', width:(pageWidth*(5/100)), sorttype:"int",editable:false },
             {name:'FileName',index:'FileName', width:(pageWidth*(35/100)), editable:false },
-            // {name:'Template',index:'Template', width:(pageWidth*(60/100)), editable:true},
             {name:'Template',index:'Template', width:(pageWidth*(60/100)), rows:9 , editable:true, edittype: "textarea", editoptions:{ rows:9 }},
 
         ],
+
+        editurl: 'clientArray',
+
         ondblClickRow: function (rowid, iRow,iCol) {
-            console.log("ondblClickRow" + rowid );
+            // console.log("ondblClickRow" + rowid );
             jQuery('#Table_input_file').editRow(rowid, true);
             reSizejqGridWidth();
+            $("#btn2").attr("disabled", true);
         },
+
+        gridComplete: function(){
+            var ids = jQuery("#Table_input_file").jqGrid('getDataIDs');
+            for(var i=1;i <= ids.length;i++){
+                jQuery('#Table_input_file').jqGrid('editRow', i, true, null, null, 'clientArray');
+            }
+            reSizejqGridWidth();
+        },
+
+
         multiselect: true,
         // caption: "Manipulating Array Data"
     // }).navGrid("#Table_input_file_Pager",{edit:false,add:true,del:false});;
@@ -243,7 +311,6 @@ function fileSelected() {
     }
 
     for(var i=0;i<mydata.length;i++){
-        // console.log(mydata[i].id);
         jQuery("#Table_input_file").jqGrid('addRowData',mydata[i].id,mydata[i]);
     }
 
@@ -251,39 +318,35 @@ function fileSelected() {
 
     $(window).on("resize", reSizejqGridWidth);
 
-    // if (checkFilePass()) {
-        // console.log("checkFilePass PASS" );
-
-        // var files = document.getElementById('input_file').files;
-        // for (var i = 0; i < files.length; i++) {
-            // document.getElementById("Table_input_file").insertRow(1).innerHTML = '<td>1</td><td>2</td><td>3</td>';
-        // }
 
 
-    // }
 }
 
 
 function uploadFile() {
-    console.log("DO : uploadFile" );
+    console.log("DO : " + arguments.callee.name );
+    console.log("DONE : " + arguments.callee.name );
 }
 
 
 
 function Choose_scenario_script(){
 
-    console.log("DO : Choose_scenario_script" );
+    console.log("DO : " + arguments.callee.name );
 
     // contorl vision
     $("#div1").hide();
 
+    console.log("DONE : " + arguments.callee.name );
 }
 
 
 
 
 $(document).ready(function() {
+
     $("#btn1").click(function() {
+
         console.log("DO : " + document.getElementById("select_opt").value );
 
         switch(document.getElementById("select_opt").value){
@@ -309,7 +372,7 @@ $(document).ready(function() {
                 Batch_gen_recipe()
                 break;
             case 'opt2' :
-                Gen_scenario_script()
+                Gen_Scenario_script()
                 break;
             default:
 
@@ -317,5 +380,20 @@ $(document).ready(function() {
 
     });
 
+    $("#btn3").click(function() {
+
+        switch(document.getElementById("select_opt").value){
+
+            case 'opt1' :
+                Batch_gen_recipe_save()
+                break;
+            case 'opt2' :
+                Gen_Scenario_script_save()
+                break;
+            default:
+
+        }
+
+    });
 
 });
