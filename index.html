@@ -6,7 +6,7 @@
 -->
 <html>
 	<head>
-		<title>Industrious by TEMPLATED</title>
+		<title>AutoGen Tool</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<meta name="description" content="" />
@@ -35,8 +35,8 @@
 		<!-- Banner -->
 			<section id="banner">
 				<div class="inner">
-					<h1>Accton Tool</h1>
-					<p>:0</p>
+					<h1>AutoGen Tool</h1>
+					<p>v0.1</p>
 				</div>
 				<video autoplay loop muted playsinline src="images/banner.mp4"></video>
 			</section>
@@ -58,11 +58,11 @@
 						<br />
 						<input type="button" value="GO" id="btn1" style="width:10%">
 						<div></div>
-						<div id="div1" style="display:none;">
-							<h2>Input File : <input multiple="multiple" type="file" name="input_file" id="input_file" onchange="fileSelected();"></input></h2>
-							<table id="Table_input_file" style="width:100%" >
+						<div id="div1" style="display:none;" class="div1" >
+							<h2 class="div1">Input File : <input multiple="multiple" type="file" name="Infile1" id="Infile1" onchange="fileSelected_1();" class="div1"></input></h2>
+							<table id="Table_1" style="width:100%" class="div1">
 							</table>
-							<div id="Table_input_file_Pager" >
+							<div id="Table_Pager_1" >
 							
 							</div>
 							<!-- <table id="Table_output_template" > -->
@@ -93,23 +93,39 @@
 								<!-- </thead> -->
 							<!-- </table> -->
 							<!-- <h2>Output File Path:</h2><input type="text" name="output_file_path"> -->
+							<input type="button" value="SAVE EDITED DATA" id="btn3" style="width:20%; display:none;" class="div1" >
+							<!-- <input type="button" value="GEN" id="btn2" style="width:10%; display:none;" class="ui-icon ui-icon-arrowthickstop-1-s" > -->
+							<a href="#" class="button icon fa-download div1" id="btn2" style="display:none;" >GEN</a>
 						</div>
-						<input type="button" value="SAVE EDITED DATA" id="btn3" style="width:20%; display:none;" >
-						<input type="button" value="GEN" id="btn2" style="width:10%; display:none;" >
-					</header>
+						<div id="div2" style="display:none;" class="div2">
+							<h2 class="div2">Input File : <input multiple="multiple" type="file" name="Infile2" id="Infile2" onchange="fileSelected_2();" class="div2"></input></h2>
+							<textarea id="Infile2_title" class="div2"> </textarea>
+							<table id="Table_2" style="width:100%" class="div2">
+							</table>
+							<div id="Table_Pager_2" >	
+							<h2 class="div2">Output File Template:</h2>
+							<!-- <p>Name <input id="Outfile_name" style="width:20%;" ></p> -->
+							<p class="div2">Name <input name="Outfile_name" id="Outfile_name" value="" class="div2" /></p>
+							<textarea id="Outfile_content" >content</textarea>
+							</div>
+							<br />
+							<input type="button" value="SAVE EDITED DATA" id="btn4" style="width:20%; display:none;" class="div2">
+							<a href="#" class="button icon fa-download div2" id="btn5" style="display:none;" >GEN</a>
+						</div>
+						</header>
 				</div>
 			</section>
 			<section class="wrapper">
 				<div class="inner">
-					<div class="special" id="div1" style="display:none;">
-						<h2>div1</h2>
-					</div>
-					<div class="special" id="div2" style="display:none;">
-						<h2>div2</h2>
-					</div>
-					<div class="special" id="div3" style="display:none;">
-						<h2>TO DO...</h2>
-					</div>
+					<!-- <div class="special" id="div1" style="display:none;"> -->
+						<!-- <h2>div1</h2> -->
+					<!-- </div> -->
+					<!-- <div class="special" id="div2" style="display:none;"> -->
+						<!-- <h2>div2</h2> -->
+					<!-- </div> -->
+					<!-- <div class="special" id="div3" style="display:none;"> -->
+						<!-- <h2>TO DO...</h2> -->
+					<!-- </div> -->
 				</div>
 			</section>	
 
